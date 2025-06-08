@@ -1,0 +1,96 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String      @id @default(cuid())
+  createdAt     DateTime    @default(now()) @map("created_at")
+  updatedAt     DateTime    @updatedAt @map("updated_at")
+  login         String      @unique
+  name          String?
+  password      String
+  imgUrl        String?
+  chats         ChatUsers[]
+  invite_sender Invite[]    @relation("invite_sender")
+  invite_target Invite[]    @relation("invite_target")
+  messages      Message[]
+
+  @@map("user")
+}
+
+model Chat {
+  id          String      @id @default(cuid())
+  createdAt   DateTime    @default(now()) @map("created_at")
+  updatedAt   DateTime    @updatedAt @map("updated_at")
+  type        Type
+  title       String
+  description String?
+  imgUrl      String?
+  users       ChatUsers[]
+  Invites     Invite[]
+  messages    Message[]
+
+  @@map("chat")
+}
+
+model ChatUsers {
+  chatId String  @map("chat_id")
+  userId String  @map("user_id")
+  role   Role
+  hidden Boolean @default(false)
+  chat   Chat    @relation(fields: [chatId], references: [id])
+  user   User    @relation(fields: [userId], references: [id])
+
+  @@id([chatId, userId])
+  @@map("chat_users")
+}
+
+model Message {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  chatId    String   @map("chat_id")
+  senderId  String   @map("sender_id")
+  content   String
+  chat      Chat     @relation(fields: [chatId], references: [id])
+  sender    User     @relation(fields: [senderId], references: [id])
+
+  @@map("message")
+}
+
+model Invite {
+  id        String       @id @default(cuid())
+  createdAt DateTime     @default(now()) @map("created_at")
+  updatedAt DateTime     @updatedAt @map("updated_at")
+  chatId    String       @map("chat_id")
+  senderId  String       @map("sender_id")
+  targetId  String       @map("target_id")
+  status    InviteStatus @default(pending)
+  chat      Chat         @relation(fields: [chatId], references: [id])
+  sender    User         @relation("invite_sender", fields: [senderId], references: [id])
+  target    User         @relation("invite_target", fields: [targetId], references: [id])
+
+  @@map("invite")
+}
+
+enum Type {
+  private
+  group
+}
+
+enum Role {
+  admin
+  user
+  banned
+}
+
+enum InviteStatus {
+  pending
+  accepted
+  declined
+}
