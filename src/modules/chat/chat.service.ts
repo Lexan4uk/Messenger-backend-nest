@@ -44,12 +44,10 @@ export class ChatService {
 				imgUrl: true,
 				createdAt: true,
 				users: {
-					where: {
-						hidden: false
-					},
 					select: {
 						userId: true,
 						role: true,
+						hidden: true,
 						user: {
 							select: {
 								id: true,
@@ -62,39 +60,43 @@ export class ChatService {
 				}
 			}
 		})
-		return chats.map(chat => {
-			const currentUserEntry = chat.users.find(u => u.userId === userId)
-			const role = currentUserEntry?.role || null
+		return chats
+			.filter(chat => chat.users.find(u => u.userId === userId && !u.hidden))
+			.map(chat => {
+				const currentUserEntry = chat.users.find(u => u.userId === userId)
+				const role = currentUserEntry?.role || null
 
-			//creating name for private chats
-			if (chat.type === Type.private) {
-				const secondUser = chat.users.find(u => u.user.id !== userId)?.user
-				const title = secondUser?.name || `@${secondUser?.login || 'unknown'}`
-				const description = `DM with ${title}`
+				//creating name for private chats
+				if (chat.type === Type.private) {
+					console.log(chat)
+					const secondUser = chat.users.find(u => u.user.id !== userId)?.user
+					const title = secondUser?.name || `@${secondUser?.login || 'unknown'}`
+					const description = `DM with ${title}`
 
+					return {
+						id: chat.id,
+						type: chat.type,
+						description: description,
+						title: title,
+						imgUrl: secondUser?.imgUrl || null,
+						role: role,
+						usersCount: null,
+						createdAt: chat.createdAt
+					}
+				}
+				const visibleUsersCount = chat.users.filter(u => !u.hidden).length
+				//for group chats, return the title as is
 				return {
 					id: chat.id,
 					type: chat.type,
-					description: description,
-					title: title,
-					imgUrl: secondUser?.imgUrl || null,
+					description: chat.description,
+					title: chat.title,
+					imgUrl: chat.imgUrl || null,
 					role: role,
-					usersCount: null,
+					usersCount: visibleUsersCount,
 					createdAt: chat.createdAt
 				}
-			}
-			//for group chats, return the title as is
-			return {
-				id: chat.id,
-				type: chat.type,
-				description: chat.description,
-				title: chat.title,
-				imgUrl: chat.imgUrl || null,
-				role: role,
-				usersCount: chat.users.length,
-				createdAt: chat.createdAt
-			}
-		})
+			})
 	}
 	async leaveChat(dto: LeaveChatDto, userId: string) {
 		await this.chatUsersService.hideUserFromChat({
