@@ -1,98 +1,66 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# Мессенджер
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+## Навигация  
+- [Общая информация](#общая-информация)  
+- [Подробнее о бэкэнде](#подробнее-о-бэкэнде)
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## Общая информация
 
-## Description
+Первая серьёзная работа. Фронтэнд писал на NextJS, бэкэнд на NestJS, база данных - PostgreSQL. Вся логика приложения и на фронте и на бэке продумана мной. Такой стек выбран по совету, как естественное продолжение после изучения React и TypeScript.
+<br/><br/>Упор был сделан именно на функционал и механики.
+<br/></br>*Всё что хотел реализовать не успел, выгорел.*
+<br/>*Об отсутствующих важных функциях напишу ниже.*
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+**Фронтэнд часть** - [репозиторий](https://github.com/Lexan4uk/Messenger-frontend-next).  
+**Бэкэнд часть** - тут.
 
-## Project setup
+## Подробнее о бэкэнде
 
-```bash
-$ npm install
-```
+Мой первый опыт в написании адекватного бэкэнда. Раньше так-сяк только на C# делал, сам не понимая что творю. Тут у меня была идея, был референс, и со временем пришло и понимание.
 
-## Compile and run the project
+Так как проект не дописан, есть несколько проблем:
 
-```bash
-# development
-$ npm run start
+Под конец проекта я решил зарефакторить весь бэкэнд, потому что пока я его делать узнал много нового, имел работающие механики и знал как их улучшить, параллельно с этим я оформлял модули для работы со Swagger. Не успел - модуль Chats, модуль Auth.
+</br>Никакой безопасности, проверок на доступы нет. Я получил представление как это можно делать поздно, когда уже лень было этим заниматься.
 
-# watch mode
-$ npm run start:dev
 
-# production mode
-$ npm run start:prod
-```
+### Архитектура и структура
+- Полностью модульная архитектура с отдельными сервисами, контроллерами и DTO для каждого модуля
+- Чистая структура кода с соблюдением принципов SOLID и использованием внедрения зависимостей
+- Полная типизация с использованием TypeScript по всему проекту
 
-## Run tests
+### Аутентификация и безопасность
+- Аутентификация на основе JWT с access- и refresh-токенами
+- Обработка refresh-токенов через куки
+- Хэширование паролей с использованием Argon2
 
-```bash
-# unit tests
-$ npm run test
+### Работа в реальном времени
+- Интеграция WebSocket через Socket.IO для прогрузки сообщений в реальном времени
+- Управление чат-комнатами (вход/выход)
 
-# e2e tests
-$ npm run test:e2e
+### Возможности чат-системы
+- Поддержка как приватных (DM), так и групповых чатов
+- Система приглашений для участия в чатах
+- Роли пользователей в чатах: admin, user, banned (баны не реализованы, только кики)
+- Скрытие чатов вместо удаления
+- Прогрузка сообщений пачками.
 
-# test coverage
-$ npm run test:cov
-```
+### База данных
+- База данных PostgreSQL и ORM Prisma
 
-## Deployment
+### Документация API
+- Интеграция Swagger для автогенерации документации
+- Детализированные валидации DTO через class-validator
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+### Особенности разработки
+- Validation Pipes для валидации входящих данных
+- Кастомные декораторы для доступа к данным пользователя
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+### Технологический стек
+- NestJS как основной backend-фреймворк
+- PostgreSQL как СУБД
+- Prisma в роли ORM
+- Socket.IO для функций реального времени
+- JWT для аутентификации
+- Swagger для документации API
 
-```bash
-$ npm install -g mau
-$ mau deploy
-```
-
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
-
-## Resources
-
-Check out a few resources that may come in handy when working with NestJS:
-
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
