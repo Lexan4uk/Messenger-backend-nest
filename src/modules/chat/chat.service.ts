@@ -68,7 +68,6 @@ export class ChatService {
 
 				//creating name for private chats
 				if (chat.type === Type.private) {
-					console.log(chat)
 					const secondUser = chat.users.find(u => u.user.id !== userId)?.user
 					const title = secondUser?.name || `@${secondUser?.login || 'unknown'}`
 					const description = `DM with ${title}`
